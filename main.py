@@ -1,8 +1,8 @@
-import asyncio
 
+import auth
 
-async def main():
-    return
+def main():
+    USER_CREDENTIALS = auth.get_credentials()
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
