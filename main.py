@@ -182,7 +182,8 @@ def listen_for_events(subscription_name: str = None):
         except KeyboardInterrupt:
             future.cancel()
         except Exception as e:
-            print("got an exception ", str(e))
+            print("got an exception ", e)
+            future.cancel()
     print("Done")
 
 USER_CREDENTIALS = get_credentials()
