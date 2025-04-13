@@ -1,10 +1,40 @@
 
-import auth
+
 from google.apps import meet_v2 as meet
-import json
 from google.apps import meet
-from google.auth.transport import requests
 from google.cloud import pubsub_v1
+import os
+import json
+
+from google.auth.transport import requests
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+def get_credentials() -> Credentials:
+    """Ensure valid credentials for calling the Meet REST API."""
+    CLIENT_SECRET_FILE = "./oauth.json"
+    credentials = None
+
+    if os.path.exists('token.json'):
+        credentials = Credentials.from_authorized_user_file('token.json')
+
+    if credentials is None:
+        flow = InstalledAppFlow.from_client_secrets_file(
+            CLIENT_SECRET_FILE,
+            scopes=[
+                'https://www.googleapis.com/auth/meetings.space.created',
+            ])
+        flow.run_local_server(port=0)
+        credentials = flow.credentials
+
+    if credentials and credentials.expired:
+        credentials.refresh(requests.Request())
+
+    if credentials is not None:
+        with open("token.json", "w") as f:
+            f.write(credentials.to_json())
+
+    return credentials
 
 def create_space() -> meet.Space:
     """Create a meeting space."""
@@ -155,7 +185,7 @@ def listen_for_events(subscription_name: str = None):
             print("got an exception ", str(e))
     print("Done")
 
-USER_CREDENTIALS = auth.get_credentials()
+USER_CREDENTIALS = get_credentials()
 space = create_space()
 print(f"Join the meeting at {space.meeting_uri}")
 
