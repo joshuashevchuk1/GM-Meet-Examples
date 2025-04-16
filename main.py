@@ -145,11 +145,16 @@ def on_transcript_ready(message: pubsub_v1.subscriber.message.Message):
     """Display information about a meeting transcript when artifact is ready."""
     payload = json.loads(message.data)
     resource_name = payload.get("transcript").get("name")
+    transcript_id = resource_name.split('/')[-1]
+
     client = meet.ConferenceRecordsServiceClient(credentials=USER_CREDENTIALS)
     transcript = client.get_transcript(name=resource_name)
-    print("transcript payload is : " , str(payload))
-    print("transcript is : ", transcript.name)
+
+    print("transcript payload is:", str(payload))
+    print("transcript is:", transcript.name)
+    print("Transcript ID:", transcript_id)
     print(f"Transcript available at {transcript.docs_destination.export_uri}")
+
 
 
 def on_message(message: pubsub_v1.subscriber.message.Message) -> None:
