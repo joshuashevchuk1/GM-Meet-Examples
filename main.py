@@ -147,6 +147,8 @@ def on_transcript_ready(message: pubsub_v1.subscriber.message.Message):
     resource_name = payload.get("transcript").get("name")
     client = meet.ConferenceRecordsServiceClient(credentials=USER_CREDENTIALS)
     transcript = client.get_transcript(name=resource_name)
+    print("transcript payload is : " , str(payload))
+    print("transcript is : ", transcript.name)
     print(f"Transcript available at {transcript.docs_destination.export_uri}")
 
 
