@@ -155,8 +155,6 @@ def on_transcript_ready(message: pubsub_v1.subscriber.message.Message):
     print("Transcript ID:", transcript_id)
     print(f"Transcript available at {transcript.docs_destination.export_uri}")
 
-
-
 def on_message(message: pubsub_v1.subscriber.message.Message) -> None:
     """Handles an incoming event from the Google Cloud Pub/Sub API."""
     event_type = message.attributes.get("ce-type")
