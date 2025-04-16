@@ -5,7 +5,6 @@ from google.apps import meet
 from google.cloud import pubsub_v1
 import os
 import json
-
 from google.auth.transport import requests
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -64,6 +63,8 @@ def subscribe_to_space(space_name: str = None, topic_name: str = None):
         "ttl": "86400s",
     }
     response = session.post("https://workspaceevents.googleapis.com/v1/subscriptions", json=body)
+    if response.status_code == 403:
+        raise Exception("got 403 : " , str(response.content))
     return response
 
 def format_participant(participant: meet.Participant) -> str:
@@ -176,14 +177,7 @@ def listen_for_events(subscription_name: str = None):
     with subscriber:
         future = subscriber.subscribe(subscription_name, callback=on_message)
         print("Listening for events")
-        try:
-            future.result()
-            print("future.result() :  " , future.result())
-        except KeyboardInterrupt:
-            future.cancel()
-        except Exception as e:
-            print("got an exception ", e)
-            future.cancel()
+        future.result()
     print("Done")
 
 USER_CREDENTIALS = get_credentials()
