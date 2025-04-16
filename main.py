@@ -22,6 +22,7 @@ def get_credentials() -> Credentials:
             CLIENT_SECRET_FILE,
             scopes=[
                 'https://www.googleapis.com/auth/meetings.space.created',
+                'https://www.googleapis.com/auth/drive.readonly',
             ])
         flow.run_local_server(port=0)
         credentials = flow.credentials
