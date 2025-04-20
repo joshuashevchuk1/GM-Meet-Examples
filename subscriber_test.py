@@ -1,4 +1,3 @@
-import os
 from google.cloud import pubsub_v1
 
 topic_name = "projects/zd-hackathon-2025/topics/workspace-events"
